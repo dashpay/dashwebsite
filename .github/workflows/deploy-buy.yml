@@ -2,7 +2,7 @@ name: Deploy Buy to Server
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master, main ]
     paths:
       - 'buy/**'
   workflow_dispatch: {}
