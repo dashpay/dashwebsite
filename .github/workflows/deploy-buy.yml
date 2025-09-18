@@ -14,6 +14,7 @@ jobs:
       SSH_HOST: ${{ secrets.SSH_HOST }}
       SSH_USER: ${{ secrets.SSH_USER }}
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PRIVATE_KEY_B64: ${{ secrets.SSH_PRIVATE_KEY_B64 }}
       SSH_PORT: ${{ secrets.SSH_PORT }}
       REMOTE_PATH: /var/www/html/buy/
     steps:
@@ -25,10 +26,25 @@ jobs:
           test -d buy || { echo "Directory 'buy/' not found at repo root"; exit 1; }
 
       - name: Prepare SSH key
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p ~/.ssh
-          printf "%s" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+
+          if [ -n "${SSH_PRIVATE_KEY_B64:-}" ]; then
+            echo "Decoding SSH key from base64 secret"
+            echo "$SSH_PRIVATE_KEY_B64" | base64 -d > ~/.ssh/id_rsa
+          else
+            # Write key from plain or \n-escaped secret, strip CRLF if present
+            printf '%b' "$SSH_PRIVATE_KEY" | tr -d '\r' > ~/.ssh/id_rsa
+          fi
+
           chmod 600 ~/.ssh/id_rsa
+          # Validate the key without printing it
+          if ! ssh-keygen -y -f ~/.ssh/id_rsa > /dev/null 2>&1; then
+            echo "SSH private key provided via secrets is invalid or unreadable." >&2
+            exit 1
+          fi
 
       - name: Deploy via rsync (with delete)
         run: |
@@ -41,4 +57,3 @@ jobs:
       #   run: |
       #     ssh -p ${SSH_PORT:-22} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
       #       "sudo chown -R www-data:www-data $REMOTE_PATH && sudo find $REMOTE_PATH -type d -exec chmod 755 {} \; && sudo find $REMOTE_PATH -type f -exec chmod 644 {} \;"
-
