@@ -1,0 +1,44 @@
+name: Deploy Buy to Server
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'buy/**'
+  workflow_dispatch: {}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+      REMOTE_PATH: /var/www/html/buy/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate source directory
+        run: |
+          test -d buy || { echo "Directory 'buy/' not found at repo root"; exit 1; }
+
+      - name: Prepare SSH key
+        run: |
+          mkdir -p ~/.ssh
+          printf "%s" "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Deploy via rsync (with delete)
+        run: |
+          RSYNC_SSH="ssh -p ${SSH_PORT:-22} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no"
+          rsync -az --delete -e "$RSYNC_SSH" ./buy/ "$SSH_USER@$SSH_HOST:$REMOTE_PATH"
+
+      # Optional: ensure correct permissions on remote after deploy
+      # Uncomment and modify if needed (requires sudo privileges on remote)
+      # - name: Fix remote permissions (optional)
+      #   run: |
+      #     ssh -p ${SSH_PORT:-22} -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no "$SSH_USER@$SSH_HOST" \
+      #       "sudo chown -R www-data:www-data $REMOTE_PATH && sudo find $REMOTE_PATH -type d -exec chmod 755 {} \; && sudo find $REMOTE_PATH -type f -exec chmod 644 {} \;"
+
