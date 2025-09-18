@@ -653,10 +653,10 @@
       "name":"Topper",
       "using":"traditional",
       "type":"onramp",
-      "instantsend":false,
+      "instantsend":true,
       "chainlocks":false,
       "bti":true,
-      "confirmations":"1",
+      "confirmations":"0",
       "currency":[
          "USD",
          "BTC",
