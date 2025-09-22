@@ -582,7 +582,7 @@
          "BTC",
          "ETH"
       ],
-      "image":"https://media.dash.org/wp-content/uploads/buy-thorswap.png",
+      "image":"https://media.dash.org/wp-content/uploads/thorswap.png",
       "url":"https://www.thorswap.finance/"
    },
 {
@@ -598,7 +598,7 @@
          "BTC",
          "ETH"
       ],
-      "image":"https://media.dash.org/wp-content/uploads/buy-thorwallet.png",
+      "image":"https://media.dash.org/wp-content/uploads/thorwallet1.png",
       "url":"https://www.thorwallet.org/"
    },
 {
@@ -736,5 +736,41 @@
       ],
       "image":"https://media.dash.org/wp-content/uploads/845b2219d0d24b999bb661c938e72455.avif",
       "url":"https://houdiniswap.com/"
+   },
+   {
+      "name":"FlypMe",
+      "using":"traditional",
+      "type":"swap",
+      "instantsend":false,
+      "chainlocks":false,
+      "bti":true,
+      "confirmations":"1",
+      "currency":[
+         "USDT",
+         "BTC",
+         "ETH",
+         "LTC",
+         "etc"
+      ],
+      "image":"https://media.dash.org/wp-content/uploads/Flyp-me-logo.png",
+      "url":"https://flyp.me/"
+   },
+   {
+      "name":"CoinoSwap",
+      "using":"traditional",
+      "type":"swap",
+      "instantsend":false,
+      "chainlocks":false,
+      "bti":true,
+      "confirmations":"1",
+      "currency":[
+         "USDT",
+         "BTC",
+         "ETH",
+         "LTC",
+         "etc"
+      ],
+      "image":"https://media.dash.org/wp-content/uploads/coin-swap-logo.png",
+      "url":"https://coinoswap.com/"
    }
 ]
