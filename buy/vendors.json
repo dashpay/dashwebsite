@@ -132,9 +132,9 @@
       "using":"traditional",
       "type":"exchange",
       "instantsend":false,
-      "chainlocks":false,
+      "chainlocks":true,
       "bti":true,
-      "confirmations":"6",
+      "confirmations":"2",
       "currency":[
          "USD",
          "BTC",
@@ -150,7 +150,7 @@
       "instantsend":false,
       "chainlocks":false,
       "bti":true,
-      "confirmations":"50",
+      "confirmations":"20",
       "currency":[
          "USD",
          "BTC"
